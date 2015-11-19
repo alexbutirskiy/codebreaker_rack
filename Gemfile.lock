@@ -1,0 +1,47 @@
+GIT
+  remote: https://github.com/alexbutirskiy/codebreaker.git
+  revision: a0ef094568c7d7d4c5a0682bab66af568edee553
+  specs:
+    rg_codebreaker (0.2.0)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    byebug (8.2.0)
+    codeclimate-test-reporter (0.4.8)
+      simplecov (>= 0.7.1, < 1.0.0)
+    diff-lcs (1.2.5)
+    docile (1.1.5)
+    json (1.8.3)
+    rack (1.6.4)
+    rspec (3.4.0)
+      rspec-core (~> 3.4.0)
+      rspec-expectations (~> 3.4.0)
+      rspec-mocks (~> 3.4.0)
+    rspec-core (3.4.1)
+      rspec-support (~> 3.4.0)
+    rspec-expectations (3.4.0)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.4.0)
+    rspec-mocks (3.4.0)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.4.0)
+    rspec-support (3.4.0)
+    simplecov (0.10.0)
+      docile (~> 1.1.0)
+      json (~> 1.8)
+      simplecov-html (~> 0.10.0)
+    simplecov-html (0.10.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  byebug
+  codeclimate-test-reporter
+  rack
+  rg_codebreaker!
+  rspec
+
+BUNDLED WITH
+   1.10.6
