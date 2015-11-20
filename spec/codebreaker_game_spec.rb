@@ -20,13 +20,37 @@ describe Racker do
     end
   end
 
+  describe '#render' do
+    PAGE_NAME = 'index'
+    PAGE_PATH = "lib/views/#{PAGE_NAME}.html.erb"
+    FILE_CONTENT = 'Some text'
+    STATUS_OK = 200
+    before(:each) do
+      allow(File).to receive(:read).and_return(FILE_CONTENT)
+      allow(ERB).to receive_message_chain(:new, result: FILE_CONTENT)
+      allow(Rack::Responce).to receive(:new)  #.with(FILE_CONTENT, STATUS_OK)
+    end
+    context "when takes a '#{PAGE_NAME}' string as a page name"
+    it "calls 'File.read' with #{PAGE_PATH}" do
+      expect(File).to receive(:read).and_return(FILE_CONTENT)
+      
+    end
+  end
+
   describe '#process' do
     context "when '/' path provided" do
-      it "returns 'Rack::Response' object" do
+      before(:each) do
         request = double('request', path: '/')
         allow(Rack::Request).to receive(:new).and_return(request)
-        test_obj = Racker.new(TEST_ENV)
-        expect(test_obj.process).to be_a Rack::Response
+        @test_obj = Racker.new(TEST_ENV)
+      end
+      it "calls 'render' method with 'index' argument" do
+        expect(@test_obj).to receive(:render).with('index').and_return(Rack::Response.new)
+        @test_obj.process
+      end
+
+      it "returns 'Rack::Response' object" do
+        expect(@test_obj.process).to be_a Rack::Response
       end
     end
   end
