@@ -21,19 +21,24 @@ describe Racker do
   end
 
   describe '#process' do
-    context "when '/' path provided" do
-      before(:each) do
-        request = double('request', path: '/')
-        allow(Rack::Request).to receive(:new).and_return(request)
-        @test_obj = Racker.new(TEST_ENV)
-      end
-      it "calls 'render' method with 'index' argument" do
-        expect(@test_obj).to receive(:render).with('index').and_return(Rack::Response.new)
-        @test_obj.process
-      end
 
-      it "returns 'Rack::Response' object" do
-        expect(@test_obj.process).to be_a Rack::Response
+    ROUTES = {'/' => 'index', '/game' => 'game'}
+
+    ROUTES.each do |path, page|
+      context "when #{path} path provided" do
+        before(:each) do
+          request = double('request', path: path, post?: false)
+          allow(Rack::Request).to receive(:new).and_return(request)
+          @test_obj = Racker.new(TEST_ENV)
+        end
+        it "calls 'render' method with '#{page}' argument" do
+          expect(@test_obj).to receive(:render).with("#{page}").and_return(Rack::Response.new)
+          @test_obj.process
+        end
+
+        it "returns 'Rack::Response' object" do
+          expect(@test_obj.process).to be_a Rack::Response
+        end
       end
     end
   end
