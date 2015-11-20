@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'rg_codebreaker', :git => 'https://github.com/alexbutirskiy/codebreaker.git'
+gem 'rake'
 gem 'rack'
 
 group :development do
