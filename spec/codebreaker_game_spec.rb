@@ -20,23 +20,6 @@ describe Racker do
     end
   end
 
-  describe '#render' do
-    PAGE_NAME = 'index'
-    PAGE_PATH = "lib/views/#{PAGE_NAME}.html.erb"
-    FILE_CONTENT = 'Some text'
-    STATUS_OK = 200
-    before(:each) do
-      allow(File).to receive(:read).and_return(FILE_CONTENT)
-      allow(ERB).to receive_message_chain(:new, result: FILE_CONTENT)
-      allow(Rack::Responce).to receive(:new)  #.with(FILE_CONTENT, STATUS_OK)
-    end
-    context "when takes a '#{PAGE_NAME}' string as a page name"
-    it "calls 'File.read' with #{PAGE_PATH}" do
-      expect(File).to receive(:read).and_return(FILE_CONTENT)
-      
-    end
-  end
-
   describe '#process' do
     context "when '/' path provided" do
       before(:each) do
