@@ -10,7 +10,11 @@ class Racker
   NOT_FOUND_PAGE = '404'
   ROOT_PAGE = 'index'
 
-  include Codebreaker
+  ROUTES = { '/' => :root, '/index' => :index, '/game' => :game, 
+             '/start' => :start, '/load' => :load }
+
+  attr_reader :message
+
   def self.call(env)
     new(env).process.finish
   end
@@ -20,13 +24,10 @@ class Racker
   end
 
   def process
-
-    case @request.path
-    when '/'      then root
-    when '/game'  then game
-    when '/start' then start
-    when '/load'  then load
-    else render(NOT_FOUND_PAGE, STATUS_NOT_FOUND)
+    if ROUTES.include?(@request.path)
+      send( ROUTES[@request.path] )
+    else
+      page_not_found
     end
   end
 
@@ -51,7 +52,7 @@ class Racker
   end
 
   def game
-    @game = Game.new
+    @game = Codebreaker::Game.new
     @game.restore
 
     if @request.post?
@@ -69,13 +70,17 @@ class Racker
   end
 
   def start
-    @game = Game.new
+    @game = Codebreaker::Game.new
     save_state
     redirect_to :game
   end
 
   def load
     redirect_to :game
+  end
+
+  def page_not_found
+    render(NOT_FOUND_PAGE, STATUS_NOT_FOUND)
   end
 end
 
