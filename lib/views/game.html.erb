@@ -7,6 +7,9 @@
   <h1>Codebreaker game</h1>
   <p>Attempts left: <%= @game.attempts_left %></p>
   <p>Hints left: <%= @game.hints_left %></p>
+  <%if @msg%>
+    <p id="msg"><%= "#{@msg}" %></p>
+  <%end%>
   <%if @answer%>
     <p>Codebreaker amswer: <%= "#{@answer}" %></p>
   <%end%>

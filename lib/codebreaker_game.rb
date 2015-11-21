@@ -8,8 +8,9 @@ class Racker
   STATUS_OK = 200
   STATUS_NOT_FOUND = 404
   NOT_FOUND_PAGE = '404'
-  ROOT_PAGE = 'index'
+  DIGITS = Codebreaker::Settings::DIGITS_TOTAL
 
+  ROOT_PAGE = 'index'
   ROUTES = { '/' => :root, '/index' => :index, '/game' => :game, 
              '/start' => :start, '/load' => :load }
 
@@ -31,6 +32,8 @@ class Racker
     end
   end
 
+  private
+  
   def render(page, status = STATUS_OK)
       file = File.read("lib/views/#{page}.html.erb")
       file = ERB.new(file).result(binding)
@@ -43,10 +46,8 @@ class Racker
     responce
   end
 
-  def save_state
-    @game.save(except: :rng)
-  end
 
+###############################################################################
   def root
     render(ROOT_PAGE)
   end
@@ -60,9 +61,11 @@ class Racker
 
       if @game.input_valid?(params["number"])
         @answer = @game.guess(params["number"])
-        save_state
+        @game.save
+        return render('win') if @game.win?
+        return render('lose') if @game.lose?
       else
-        raise ArgumentError
+        @msg = "Invalid input. You should enter #{DIGITS} numbers from 1 to 6"
       end
     end
 
@@ -71,7 +74,7 @@ class Racker
 
   def start
     @game = Codebreaker::Game.new
-    save_state
+    @game.save
     redirect_to :game
   end
 
