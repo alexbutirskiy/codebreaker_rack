@@ -8,6 +8,8 @@ class Racker
   STATUS_OK = 200
   STATUS_NOT_FOUND = 404
   NOT_FOUND_PAGE = '404'
+  UNEXPECTED_BEHAVIOR_TEXT = 'Unexpected request received. \
+                                Please send report to admin@codebreaker.com'
   DIGITS = Codebreaker::Settings::DIGITS_TOTAL
 
   ROOT_PAGE = 'index'
@@ -33,7 +35,7 @@ class Racker
   end
 
   private
-  
+
   def render(page, status = STATUS_OK)
       file = File.read("lib/views/#{page}.html.erb")
       file = ERB.new(file).result(binding)
@@ -59,13 +61,20 @@ class Racker
     if @request.post?
       params = @request.params
 
-      if @game.input_valid?(params["number"])
-        @answer = @game.guess(params["number"])
+      if params["hint"]
+        @msg = "Hint: #{@game.hint}"
         @game.save
-        return render('win') if @game.win?
-        return render('lose') if @game.lose?
+      elsif params["number"]
+        if @game.input_valid?(params["number"])
+          @answer = @game.guess(params["number"])
+          @game.save
+          return render('win') if @game.win?
+          return render('lose') if @game.lose?
+        else
+          @msg = "Invalid input. You should enter #{DIGITS} numbers from 1 to 6"
+        end
       else
-        @msg = "Invalid input. You should enter #{DIGITS} numbers from 1 to 6"
+        @msg = UNEXPECTED_BEHAVIOR_TEXT
       end
     end
 

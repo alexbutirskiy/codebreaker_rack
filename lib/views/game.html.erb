@@ -11,11 +11,16 @@
     <p id="msg"><%= "#{@msg}" %></p>
   <%end%>
   <%if @answer%>
-    <p>Codebreaker amswer: <%= "#{@answer}" %></p>
+    <p>Codebreaker answer: <%= "#{@answer}" %></p>
   <%end%>
   <form method="post">
     <input name="number" type="text"></input>
+    <input type="hidden" name="cmd" value="guess">
     <input type="submit" value = "Send"></input>
+  </form>
+  <form method="post">
+    <input type="hidden" name="hint">
+    <input type="submit" value = "Get Hint">
   </form>
   </body>
 </html>
