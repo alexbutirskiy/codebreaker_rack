@@ -1,26 +1,18 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Codebreaker</title>
-  </head>
-  <body>
-  <h1>Codebreaker game</h1>
-  <p>Attempts left: <%= @game.attempts_left %></p>
-  <p>Hints left: <%= @game.hints_left %></p>
-  <%if @msg%>
-    <p id="msg"><%= "#{@msg}" %></p>
-  <%end%>
-  <%if @answer%>
-    <p>Codebreaker answer: <%= "#{@answer}" %></p>
-  <%end%>
-  <form method="post">
-    <input name="number" type="text"></input>
-    <input type="hidden" name="cmd" value="guess">
-    <input type="submit" value = "Send"></input>
-  </form>
-  <form method="post">
-    <input type="hidden" name="hint">
-    <input type="submit" value = "Get Hint">
-  </form>
-  </body>
-</html>
+<h1>Codebreaker game</h1>
+<p>Attempts left: <%= @game.attempts_left %></p>
+<p>Hints left: <%= @game.hints_left %></p>
+<%if @msg%>
+  <p id="msg"><%= "#{@msg}" %></p>
+<%end%>
+<%if @answer%>
+  <p>Codebreaker answer: <%= "#{@answer}" %></p>
+<%end%>
+<form method="post">
+  <input name="number" type="text"></input>
+  <input type="hidden" name="cmd" value="guess">
+  <input type="submit" value = "Send"></input>
+</form>
+<form method="post">
+  <input type="hidden" name="hint">
+  <input type="submit" value = "Get Hint">
+</form>

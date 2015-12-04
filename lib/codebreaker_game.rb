@@ -37,9 +37,13 @@ class Racker
   private
 
   def render(page, status = STATUS_OK)
-      file = File.read("lib/views/#{page}.html.erb")
-      file = ERB.new(file).result(binding)
-      responce = Rack::Response.new(file, status)
+    file = File.read("lib/views/#{page}.html.erb")
+    layouts = File.read("lib/views/layouts.html.erb")
+
+    content = ERB.new(file).result(binding)
+    final = ERB.new(layouts).result(binding)
+
+    Rack::Response.new(final, status)
   end
 
   def redirect_to(page)
