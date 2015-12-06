@@ -1,0 +1,20 @@
+<div id="register">
+  <form method="post">
+    <p>User name:</p>
+    <input name='user_name' type='text'>
+    <p>Password:</p>
+    <input name='password' type='password'>
+    <p> Password confirmation:</p>
+    <input name='password_confirm' type='password'> <br>
+    <input type="submit" value = "Register"></input>
+  </form>
+
+  <%if @register_msgs%>
+    <div id="register_msg">
+      <%@register_msgs.each do |msg|%>
+        <p><%= msg %></p>
+      <%end%>
+    </div>
+  <%end%>
+
+</div>

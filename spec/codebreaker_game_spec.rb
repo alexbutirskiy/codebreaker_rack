@@ -20,7 +20,7 @@ describe Racker do
     Racker::ROUTES.each do |path, method|
       context "when @request.path is '#{path}'" do
         before(:each) do
-          request = double('request', path: path)
+          request = double('request', path: path, cookies: {})
           allow(Rack::Request).to receive(:new).and_return(request)
           @test_obj = Racker.new(TEST_ENV)
         end
@@ -39,7 +39,7 @@ describe Racker do
 
     context "when @request.path is '#{NOT_DEFINED_PATH}'" do
       before(:each) do
-        request = double('request', path: NOT_DEFINED_PATH)
+        request = double('request', path: NOT_DEFINED_PATH, cookies: {})
         allow(Rack::Request).to receive(:new).and_return(request)
         @test_obj = Racker.new(TEST_ENV)
       end

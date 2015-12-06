@@ -5,6 +5,24 @@
     <link href="/assets/app" rel="stylesheet"/>
   </head>
   <body>
-  <%= content %>
+
+    <div id="top_menu">
+      <ul class="to_right">
+
+        <%if @current_user.nil?%>
+          <li><a href="register">Register</a></li>
+          <li><a href="login">Log in</a></li>
+        <%else%>
+          <li><a href="logout">Log out</a></li>
+        <%end%>
+      </ul>
+
+      <ul class="to_left">
+        <li><a href="start">Start new game</a></li>
+        <li><a href="load">Load saved game</a></li>
+      </ul>
+    </div>
+
+    <%= content %>
   </body>
 </html>
