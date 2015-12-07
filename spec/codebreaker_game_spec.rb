@@ -5,6 +5,7 @@ describe Racker do
   TEST_OUT = [200, {}, ["Test"]]
   NOT_DEFINED_PATH = '/not_defined'
   describe '.call' do
+
     it "calls one by one 'new', 'process' and 'finish' methods" do
       expect(Racker).to receive_message_chain(:new, :process, :finish)
       Racker.call(TEST_ENV)
@@ -17,6 +18,8 @@ describe Racker do
   end
 
   describe '#process' do
+    let(:response) {Rack::Response.new}
+
     Racker::ROUTES.each do |path, method|
       context "when @request.path is '#{path}'" do
         before(:each) do
@@ -26,13 +29,13 @@ describe Racker do
         end
 
         it "calls a '#{method}' method" do
-          expect(@test_obj).to receive(method)
+          expect(@test_obj).to receive(method).and_return(response)
           @test_obj.process
         end
 
         it "returns '#{method}' method output" do
-          allow(@test_obj).to receive(method).and_return(TEST_OUT)
-          expect(@test_obj.process).to eq TEST_OUT
+          allow(@test_obj).to receive(method).and_return(response)
+          expect(@test_obj.process).to eq response
         end
       end
     end
@@ -43,14 +46,16 @@ describe Racker do
         allow(Rack::Request).to receive(:new).and_return(request)
         @test_obj = Racker.new(TEST_ENV)
       end
+
       it "calls #page_not_found method" do
-        expect(@test_obj).to receive(:page_not_found)
+        expect(@test_obj).to receive(:page_not_found).and_return(response)
         @test_obj.process
       end
-        it "returns '#page_not_found' method output" do
-          allow(@test_obj).to receive(:page_not_found).and_return(TEST_OUT)
-          expect(@test_obj.process).to eq TEST_OUT
-        end
+
+      it "returns '#page_not_found' method output" do
+        allow(@test_obj).to receive(:page_not_found).and_return(response)
+        expect(@test_obj.process).to eq response
+      end
     end
   end
 

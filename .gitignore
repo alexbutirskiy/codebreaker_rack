@@ -36,3 +36,4 @@ build/
 .byebug_history
 CodebreakerGame.yml
 users.yaml
+db/*.yml

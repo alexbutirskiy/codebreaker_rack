@@ -17,7 +17,7 @@ class Racker
   ROUTES = { '/' => :index, '/index' => :index, '/game' => :game, 
              '/start' => :start, '/load' => :load, '/register' => :register,
              '/login' => :login, '/logout' => :logout}
-
+  DB_PATH = 'db/'
   PWD_MIN_LENGHT = 4
   USER_NAME_REGEX = /^[a-zA-Z0-9_@.]+$/
   WRONG_USER_NAME_MSG = "Wrong user name. Only letters, digits, '_', '@'' and '.' allowed"
@@ -37,14 +37,16 @@ class Racker
   end
 
   def process
-    @session = @request.cookies['codebreaker_session']
+    @session = JSON.load(@request.cookies['codebreaker_session'])  || {}
+
     get_current_user
     responce = if ROUTES.include?(@request.path)
       send( ROUTES[@request.path] )
     else
       page_not_found
     end
-    @session ? responce.set_cookie('codebreaker_session', @session) : responce.delete_cookie('codebreaker_session')
+    !@session.empty? ? responce.set_cookie('codebreaker_session', @session.to_json) : responce.delete_cookie('codebreaker_session')
+
     responce
   end
 
@@ -67,7 +69,12 @@ class Racker
   end
 
   def get_current_user
-    @current_user = @request.cookies['current_user']
+    @current_user = @session['user_name']
+  end
+
+  def games_path(user)
+    raise ArgumentError, 'User is not a String' unless user.is_a? String
+    DB_PATH + user
   end
 
 
@@ -77,19 +84,21 @@ class Racker
   end
 
   def game
+    return redirect_to(:login) if @current_user.nil?
+
     @game = Codebreaker::Game.new
-    @game.restore
+    @game.restore(games_path(@current_user))
 
     if @request.post?
       params = @request.params
 
       if params["hint"]
         @msg = "Hint: #{@game.hint}"
-        @game.save
+        @game.save(games_path(@current_user))
       elsif params["number"]
         if @game.input_valid?(params["number"])
           @answer = @game.guess(params["number"])
-          @game.save
+          @game.save(games_path(@current_user))
           return render('win') if @game.win?
           return render('lose') if @game.lose?
         else
@@ -104,8 +113,10 @@ class Racker
   end
 
   def start
+    return redirect_to(:login) if @current_user.nil?
+
     @game = Codebreaker::Game.new
-    @game.save
+    @game.save(games_path(@current_user))
     redirect_to :game
   end
 
@@ -124,7 +135,7 @@ class Racker
       user = User.find_by(name: @request.params["user_name"])
       if user
         if user.password == @request.params["password"]
-          responce.set_cookie('current_user', @request.params["user_name"])
+          @session['user_name'] = @request.params['user_name']
         else
           @register_msgs << "Wrong password"
         end
@@ -142,7 +153,7 @@ class Racker
 
   def logout
     responce = redirect_to(:index)
-    responce.delete_cookie('current_user')
+    @session['user_name'] = nil
     responce
   end
 
@@ -171,7 +182,7 @@ class Racker
       if @register_msgs.empty?
         User.new(name: @request.params["user_name"], password: @request.params["password"]).save
         responce = redirect_to(:index)
-        responce.set_cookie('current_user', @request.params["user_name"])
+        @session['user_name'] = @request.params['user_name']
         responce
       else
         render('register')
@@ -180,6 +191,7 @@ class Racker
   end
 
   def page_not_found
+byebug
     render(NOT_FOUND_PAGE, STATUS_NOT_FOUND)
   end
 end
