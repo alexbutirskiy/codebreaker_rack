@@ -3,7 +3,6 @@ require 'erb'
 require 'bundler/setup'
 require 'rg_codebreaker'
 require_relative './user'
-require 'byebug'
 
 class Racker
   STATUS_OK = 200
