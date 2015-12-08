@@ -1,4 +1,5 @@
 require 'openssl'
+require 'byebug'
 
 class SafeCookies
   def initialize(app)
@@ -6,9 +7,8 @@ class SafeCookies
   end
 
   def call(env)
-
     status, headers, body = @app.call(env)
-
+byebug
     [status, headers, body]
   end
 end
