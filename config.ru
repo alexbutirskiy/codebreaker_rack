@@ -1,4 +1,5 @@
 require './lib/codebreaker_game'
+require './lib/safe_cookies'
 require 'sprockets'
 
 map '/assets' do
@@ -8,4 +9,5 @@ map '/assets' do
   run environment
 end
 
+use SafeCookies
 run Racker

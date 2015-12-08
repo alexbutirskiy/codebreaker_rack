@@ -1,5 +1,7 @@
 /*
-* *= require reset
+*
+*= require reset
+*
 */
 
 body {
@@ -9,6 +11,9 @@ body {
     margin-bottom: 1em;
     font-size: 42px;
     text-align: center;
+  }
+  ol {
+    list-style-type: decimal
   }
 }
 
@@ -48,6 +53,27 @@ body {
   }
 }
 
+@mixin flash($font_color, $bg) {
+  width: 100%;
+  // margin-left: auto;
+  // margin-right: auto;
+  background-color: $bg;
+  height: 2em;
+  p {
+    padding: 0.5em;
+    text-align: center;
+    color: $font_color;
+  }
+}
+
+#flash_green {
+  @include flash(green, #EFE)
+}
+
+#flash_red {
+  @include flash(red, #FEE)
+}
+
 #game {
   width: 300px;
   margin-left: auto;
@@ -59,12 +85,24 @@ body {
   }
 }
 
+@mixin msg {
+  font-size: 0.8em;
+  text-align: center;
+  color: #E55;
+  margin: 0, auto;
+}
+
+#msg {
+  @include msg;
+  color: #000;
+}
+
+#error_msg {
+  @include msg
+}
+
 #register_msg {
-  p{
-    font-size: 0.8em;
-    color: #E55;
-    margin: 0, auto;
-  }
+  @include msg
 }
 
 #register {

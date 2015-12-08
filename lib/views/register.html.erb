@@ -10,11 +10,10 @@
   </form>
 
   <%if @register_msgs%>
-    <div id="register_msg">
+    <ol id="register_msg">
       <%@register_msgs.each do |msg|%>
-        <p><%= msg %></p>
+        <li><%= msg %></li>
       <%end%>
-    </div>
+    </ol>
   <%end%>
-
 </div>

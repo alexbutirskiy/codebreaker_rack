@@ -23,6 +23,12 @@
       </ul>
     </div>
 
+    <%if @session['flash']%>
+      <div <%= "id='#{@session['flash']['style']}'"%>>
+        <p><%= "#{@session['flash']['msg']}" %></p>
+      </div>
+    <%end%>
+
     <%= content %>
   </body>
 </html>

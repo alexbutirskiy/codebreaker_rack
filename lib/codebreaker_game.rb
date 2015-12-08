@@ -59,6 +59,8 @@ class Racker
     content = ERB.new(file).result(binding)
     final = ERB.new(layouts).result(binding)
 
+    @session.delete('flash')
+
     Rack::Response.new(final, status)
   end
 
@@ -87,7 +89,14 @@ class Racker
     return redirect_to(:login) if @current_user.nil?
 
     @game = Codebreaker::Game.new
-    @game.restore(games_path(@current_user))
+
+    begin
+      @game.restore(games_path(@current_user))
+    rescue
+      @session['flash'] = { msg: "It looks like you don't have any saved game", 
+                            style: 'flash_red' }
+      return redirect_to(:index)
+    end
 
     if @request.post?
       params = @request.params
@@ -102,7 +111,7 @@ class Racker
           return render('win') if @game.win?
           return render('lose') if @game.lose?
         else
-          @msg = "Invalid input. You should enter #{DIGITS} numbers from 1 to 6"
+          @game_error_msg = "Invalid input. You should enter #{DIGITS} numbers from 1 to 6"
         end
       else
         @msg = UNEXPECTED_BEHAVIOR_TEXT
@@ -113,7 +122,10 @@ class Racker
   end
 
   def start
-    return redirect_to(:login) if @current_user.nil?
+    if @current_user.nil?
+      @session['flash'] = { msg: 'You have not logged in yet', style: 'flash_red' }
+      return redirect_to(:login)
+    end
 
     @game = Codebreaker::Game.new
     @game.save(games_path(@current_user))
@@ -121,6 +133,12 @@ class Racker
   end
 
   def load
+    if @current_user.nil?
+      @session['flash'] = { msg: 'You have not logged in yet', style: 'flash_red' }
+      return redirect_to(:login)
+    end
+
+
     redirect_to :game
   end
 
@@ -144,6 +162,7 @@ class Racker
       end
 
       if @register_msgs.empty?
+        @session['flash'] = { msg: 'You successfully logged in', style: 'flash_green' }
         responce
       else
         render(:login)
@@ -154,6 +173,7 @@ class Racker
   def logout
     responce = redirect_to(:index)
     @session['user_name'] = nil
+    @session['flash'] = { msg: 'You successfully logged out', style: 'flash_green' }
     responce
   end
 
@@ -183,6 +203,7 @@ class Racker
         User.new(name: @request.params["user_name"], password: @request.params["password"]).save
         responce = redirect_to(:index)
         @session['user_name'] = @request.params['user_name']
+        @session['flash'] = { msg: 'You successfully logged in', style: 'flash_green' }
         responce
       else
         render('register')
@@ -191,7 +212,6 @@ class Racker
   end
 
   def page_not_found
-byebug
     render(NOT_FOUND_PAGE, STATUS_NOT_FOUND)
   end
 end

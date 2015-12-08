@@ -3,7 +3,7 @@
   <p>Attempts left: <%= @game.attempts_left %></p>
   <p>Hints left: <%= @game.hints_left %></p>
   <%if @msg%>
-    <p id="msg"><%= "#{@msg}" %></p>
+    <p><%= "#{@msg}" %></p>
   <%end%>
   <%if @answer%>
     <p>Codebreaker answer: <%= "#{@answer}" %></p>
@@ -17,4 +17,10 @@
     <input type="hidden" name="hint">
     <input type="submit" value = "Get Hint">
   </form>
+
 </div>
+
+  <%if @game_error_msg%>
+    <p id="error_msg"><%= "#{@game_error_msg}" %></p>
+  <%end%>
+
