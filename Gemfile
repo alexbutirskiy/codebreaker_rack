@@ -8,6 +8,7 @@ gem 'sass'
 
 group :development do
   gem 'byebug'
+  gem 'guard-rspec', require: false
 end
 
 group :development, :test do
