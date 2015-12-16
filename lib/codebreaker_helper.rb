@@ -1,3 +1,5 @@
+require 'byebug'
+
 module CodebreakerHelper
   DB_PATH = 'db/'
   PWD_MIN_LENGHT = 4
@@ -20,7 +22,8 @@ module CodebreakerHelper
 
       @register_msgs = []
 
-      user = Racker::User.find_by(name: @request.params["user_name"])
+      user = Racker::User.find_by(name: @request.params['user_name'])
+
       if user
         if user.password == @request.params["password"]
           @session['user_name'] = @request.params['user_name']

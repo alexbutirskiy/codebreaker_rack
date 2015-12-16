@@ -134,6 +134,18 @@ describe Racker do
   end
 
   describe '#redirect_to' do
+    it 'calls Response.new.redirect(\'page\')' do
+        response = double('response')
+        expect(Rack::Response).to receive(:new).and_return(response)
+        expect(response).to receive(:redirect).with("/#{SOME_PAGE}")
+        racker.send(:redirect_to, SOME_PAGE)
+    end
 
+    it 'returns response' do
+        response = double('response')
+        allow(Rack::Response).to receive(:new).and_return(response)
+        allow(response).to receive(:redirect)
+        expect(racker.send(:redirect_to, SOME_PAGE)).to eq response
+    end
   end
 end

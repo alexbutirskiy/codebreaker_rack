@@ -13,8 +13,8 @@ class Racker
                                 'Please send report to admin@codebreaker.com'
   DIGITS = Codebreaker::Settings::DIGITS_TOTAL
 
-  ROOT_PAGE = 'index'
-  ROUTES = { '/' => :index, '/index' => :index, '/game' => :game,
+  ROOT_PAGE = :index
+  ROUTES = { '/' => ROOT_PAGE, '/index' => :index, '/game' => :game,
              '/start' => :start, '/load' => :load, '/register' => :register,
              '/login' => :login, '/logout' => :logout }
 
@@ -30,15 +30,15 @@ class Racker
   end
 
   def process
-    responce = if ROUTES.include?(@request.path)
+    response = if ROUTES.include?(@request.path)
                  send(ROUTES[@request.path])
                else
                  page_not_found
                end
 
-    responce.set_cookie('codebreaker_session', @session.to_json)
+    response.set_cookie('codebreaker_session', @session.to_json)
 
-    responce
+    response
   end
 
   private
@@ -56,9 +56,9 @@ class Racker
   end
 
   def redirect_to(page)
-    responce = Rack::Response.new
-    responce.redirect("/#{page}")
-    responce
+    response = Rack::Response.new
+    response.redirect("/#{page}")
+    response
   end
 
   include CodebreakerHelper
